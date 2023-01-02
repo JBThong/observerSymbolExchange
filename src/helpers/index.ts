@@ -24,7 +24,7 @@ export function generateOrderList(stateOrder: number, bookTicker: any, limit: nu
         result = [...result, item];
     }
 
-    return result;
+    return result.sort((a,b) => stateOrder === STATE_ORDER.bidOrder ? a.price - b.price : b.price - a.price);
 }
 
 /**
