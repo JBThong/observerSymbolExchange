@@ -4,6 +4,7 @@ import { BINANCE_HOST } from '../../../configuration/constants/index';
 import { lastValueFrom } from 'rxjs';
 
 import { generateOrderList } from '../../helpers/index'
+import { rejects } from 'assert';
 
 @Injectable()
 export class SymbolService {
@@ -14,7 +15,16 @@ export class SymbolService {
     }
 
     async getOrderList(symbol, limit = 10) {
-        let bookTicker = await this.getLatestOrderbookProgress(symbol).then(data => { return data.data })
+        let bookTicker = await this.getLatestOrderbookProgress(symbol)
+                                    .then(data => { return data.data })
+                                    .catch(err => { 
+                                        console.log(err.response.data)
+                                        return err.response.data});
+
+        if (bookTicker?.code) {
+            throw new Error(bookTicker.msg);
+        }
+
         
         let bidOrderList = generateOrderList(1, bookTicker, limit);
         let askOrderList = generateOrderList(2, bookTicker, limit);

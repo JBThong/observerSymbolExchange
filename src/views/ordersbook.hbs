@@ -6,42 +6,47 @@
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
    </head>
    <body>
-      <header>
-         <h2>Orderbook of {{symbol}}</h2>
-      </header>
-      <div class="orderlist-container d-flex me-5 ms-5">
-         <table class="orderbook-bid table me-5 ms-5">
-            <thead>
-               <tr class="orderbook-header">
-                  <th class="item">Size</th>
-                  <th class="item">Bid</th>
-               </tr>
-            </thead>
-            <tbody>
-               {{#each bidOrderList}}
-                  <tr>
-                     <td>{{qty}}</td>
-                     <td style="color: rgb(14, 203, 129);">{{price}}</td>
+      {{#if data }}
+         <header>
+            <h2>Orderbook of {{data.symbol}}</h2>
+         </header>
+         <div class="orderlist-container d-flex me-5 ms-5">
+            <table class="orderbook-bid table me-5 ms-5">
+               <thead>
+                  <tr class="orderbook-header">
+                     <th class="item">Size</th>
+                     <th class="item">Bid</th>
                   </tr>
-               {{/each}}
-            </tbody>
-         </table>
-         <table class="orderbook-ask table me-5 ms-5">
-            <thead>
-               <tr class="orderbook-header">
-                  <th class="item">Ask</th>
-                  <th class="item">Size</th>
-               </tr>
-            </thead>
-            <tbody>
-               {{#each askOrderList}}
-                  <tr>
-                     <td style="color: rgb(246, 70, 93);">{{price}}</td>
-                     <td>{{qty}}</td>
+               </thead>
+               <tbody>
+                  {{#each data.bidOrderList}}
+                     <tr>
+                        <td>{{qty}}</td>
+                        <td style="color: rgb(14, 203, 129);">{{price}}</td>
+                     </tr>
+                  {{/each}}
+               </tbody>
+            </table>
+            <table class="orderbook-ask table me-5 ms-5">
+               <thead>
+                  <tr class="orderbook-header">
+                     <th class="item">Ask</th>
+                     <th class="item">Size</th>
                   </tr>
-               {{/each}}
-            </tbody>
-         </table>
-      </div>
+               </thead>
+               <tbody>
+                  {{#each data.askOrderList}}
+                     <tr>
+                        <td style="color: rgb(246, 70, 93);">{{price}}</td>
+                        <td>{{qty}}</td>
+                     </tr>
+                  {{/each}}
+               </tbody>
+            </table>
+         </div>   
+      {{else}}
+         <span>{{msg}}</span>
+      {{/if}}
+      
    </body>
 </html>
