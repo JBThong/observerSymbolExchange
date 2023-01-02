@@ -10,9 +10,9 @@ export class SymbolController {
 
     @Get()
     @Render('ordersbook')
-    getOrderList(@Query('symbol') symbol) {
-        return this.symbolService.getLatestOrderbookProgress(symbol).then(data => {
-            return {data: data};
+    getOrderList(@Query() query: { symbol: string, limit: number }) {
+        return this.symbolService.getOrderList(query?.symbol, query?.limit).then(data => {
+            return data;
         });
     }
 }
