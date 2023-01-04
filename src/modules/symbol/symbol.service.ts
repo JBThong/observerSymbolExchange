@@ -3,8 +3,7 @@ import { HttpService } from '@nestjs/axios';
 import { BINANCE_HOST } from '../../../configuration/constants/index';
 import { lastValueFrom } from 'rxjs';
 
-import { generateOrderList } from '../../helpers/index'
-import { rejects } from 'assert';
+import { generateOrderList, calculateSum } from '../../helpers/index'
 
 @Injectable()
 export class SymbolService {
@@ -28,11 +27,19 @@ export class SymbolService {
         
         let bidOrderList = generateOrderList(1, bookTicker, limit);
         let askOrderList = generateOrderList(2, bookTicker, limit);
+        let sumSizeBidOrderList = calculateSum(bidOrderList, 'qty').toFixed(6);
+        let sumSizeAskOrderList = calculateSum(askOrderList, 'qty').toFixed(6);
+        let sumTotalBidOrderList = calculateSum(bidOrderList, 'price').toFixed(6);
+        let sumTotalAskOrderList = calculateSum(askOrderList, 'price').toFixed(6);
 
         return {
             symbol: symbol,
             bidOrderList: bidOrderList,
             askOrderList: askOrderList,
+            sumSizeBidOrderList: sumSizeBidOrderList,
+            sumSizeAskOrderList: sumSizeAskOrderList,
+            sumTotalBidOrderList: sumTotalBidOrderList,
+            sumTotalAskOrderList: sumTotalAskOrderList,
         }
     
     }

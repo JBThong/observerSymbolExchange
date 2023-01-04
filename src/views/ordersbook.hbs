@@ -11,38 +11,50 @@
             <h2>Orderbook of {{data.symbol}}</h2>
          </header>
          <div class="orderlist-container d-flex me-5 ms-5">
-            <table class="orderbook-bid table me-5 ms-5">
-               <thead>
-                  <tr class="orderbook-header">
-                     <th class="item">Size</th>
-                     <th class="item">Bid</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  {{#each data.bidOrderList}}
-                     <tr>
-                        <td>{{qty}}</td>
-                        <td style="color: rgb(14, 203, 129);">{{price}}</td>
+            <div class="me-5 ms-5">
+               <table class="orderbook-bid table">
+                  <thead>
+                     <tr class="orderbook-header">
+                        <th class="item">Size</th>
+                        <th class="item">Bid</th>
                      </tr>
-                  {{/each}}
-               </tbody>
-            </table>
-            <table class="orderbook-ask table me-5 ms-5">
-               <thead>
-                  <tr class="orderbook-header">
-                     <th class="item">Ask</th>
-                     <th class="item">Size</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  {{#each data.askOrderList}}
-                     <tr>
-                        <td style="color: rgb(246, 70, 93);">{{price}}</td>
-                        <td>{{qty}}</td>
+                  </thead>
+                  <tbody>
+                     {{#each data.bidOrderList}}
+                        <tr>
+                           <td>{{qty}}</td>
+                           <td style="color: rgb(14, 203, 129);">{{price}}</td>
+                        </tr>
+                     {{/each}}
+                  </tbody>
+               </table>
+               <div class="m-2">
+                  <span class="me-2"><b>Total:</b> {{data.sumTotalBidOrderList}}</span>
+                  <span><b>Size:</b> {{data.sumSizeBidOrderList}}</span>
+               </div>
+            </div>
+            <div class="me-5 ms-5">
+               <table class="orderbook-ask table me-5 ms-5">
+                  <thead>
+                     <tr class="orderbook-header">
+                        <th class="item">Ask</th>
+                        <th class="item">Size</th>
                      </tr>
-                  {{/each}}
-               </tbody>
-            </table>
+                  </thead>
+                  <tbody>
+                     {{#each data.askOrderList}}
+                        <tr>
+                           <td style="color: rgb(246, 70, 93);">{{price}}</td>
+                           <td>{{qty}}</td>
+                        </tr>
+                     {{/each}}
+                  </tbody>
+               </table>
+               <div class="m-2">
+                  <span class="me-2"><b>Total:</b> {{data.sumTotalAskOrderList}}</span>
+                  <span><b>Size:</b> {{data.sumSizeAskOrderList}}</span>
+               </div>
+            </div>
          </div>   
       {{else}}
          <span>{{msg}}</span>
