@@ -8,11 +8,11 @@
    <body>
       {{#if data }}
          <header>
-            <h2>Orderbook of {{data.symbol}}</h2>
+            <h2 class="title">Orderbook of {{data.symbol}}</h2>
          </header>
          <div class="orderlist-container d-flex me-5 ms-5">
-            <div class="me-5 ms-5">
-               <table class="orderbook-bid table">
+            <div class="me-5 ms-5 orderbook-bid">
+               <table class="table">
                   <thead>
                      <tr class="orderbook-header">
                         <th class="item">Size</th>
@@ -28,13 +28,13 @@
                      {{/each}}
                   </tbody>
                </table>
-               <div class="m-2">
+               <div class="m-2 total-bid">
                   <span class="me-2"><b>Total:</b> {{data.sumTotalBidOrderList}}</span>
                   <span><b>Size:</b> {{data.sumSizeBidOrderList}}</span>
                </div>
             </div>
-            <div class="me-5 ms-5">
-               <table class="orderbook-ask table me-5 ms-5">
+            <div class="me-5 ms-5 orderbook-ask">
+               <table class="table me-5 ms-5">
                   <thead>
                      <tr class="orderbook-header">
                         <th class="item">Ask</th>
@@ -50,7 +50,7 @@
                      {{/each}}
                   </tbody>
                </table>
-               <div class="m-2">
+               <div class="m-2 total-ask">
                   <span class="me-2"><b>Total:</b> {{data.sumTotalAskOrderList}}</span>
                   <span><b>Size:</b> {{data.sumSizeAskOrderList}}</span>
                </div>
@@ -59,6 +59,76 @@
       {{else}}
          <span>{{msg}}</span>
       {{/if}}
+      <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"
+   integrity="sha384-KAZ4DtjNhLChOB/hxXuKqhMLYvx3b5MlT55xPEiNmREKRzeEm+RVPlTnAn0ajQNs"
+   crossorigin="anonymous"></script>
+   <script>
+      function updateTitle(title) {
+         let titleEl = document.querySelector('.title');
+         titleEl.textContent = `Orderbook of ${title}`;
+      }
+
+      function updateBidOrderList(bidOrderList) {
+         let orderBidBody = document.querySelector('.orderbook-bid table tbody');
+         let tbody = '';
+         bidOrderList.map(item => {
+            tbody += `
+               <tr>
+                  <td>${item.qty}</td>
+                  <td style="color: rgb(14, 203, 129);">${item.price}</td>
+               </tr>
+            `;
+         });
+
+         orderBidBody.innerHTML = tbody;
+      }
+
+      function updateAskOrderList(askOrderList) {
+         let askBidBody = document.querySelector('.orderbook-ask table tbody');
+         let tbody = '';
+         askOrderList.map(item => {
+            console.log(item)
+            tbody += `
+               <tr>
+                  <td style="color: rgb(246, 70, 93);">${item.price}</td>
+                  <td>${item.qty}</td>
+               </tr>
+            `;
+         });
+
+         askBidBody.innerHTML = tbody;
+      }
+
+      function updateTotalBid(sumTotalBidOrderList, sumSizeBidOrderList) {
+         let totalBid = document.querySelector('.total-bid');
+         totalBid.innerHTML = `
+            <span class="me-2"><b>Total:</b> ${sumTotalBidOrderList}</span>
+                  <span><b>Size:</b> ${sumSizeBidOrderList}</span>`;
+      }
+
+      function updateTotalTask(sumTotalAskOrderList, sumSizeAskOrderList) {
+         let totalAsk = document.querySelector('.total-ask');
+         totalAsk.innerHTML = `
+            <span class="me-2"><b>Total:</b> ${sumTotalAskOrderList}</span>
+                  <span><b>Size:</b> ${sumSizeAskOrderList}</span>`;
+      }
+
+      const socket = new io();
+      socket.emit('sendSymbol', 'ETHBTC')
+
       
+      let orderAskBody = document.querySelector('.orderbook-ask table tbody');
+      socket.on('recOrderList', (data) => {
+         if (data) {
+            updateTitle(data.symbol);
+            updateBidOrderList(data.bidOrderList);
+            updateAskOrderList(data.askOrderList);
+            updateTotalBid(data.sumTotalBidOrderList, data.sumSizeBidOrderList);
+            updateTotalTask(data.sumTotalAskOrderList, data.sumSizeAskOrderList);
+         }
+      })
+
+      
+   </script>
    </body>
 </html>

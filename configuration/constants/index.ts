@@ -5,3 +5,5 @@ export enum STATE_ORDER {
 };
 export const TOTAL_QUANTITY_PRICE = 5;
 export const TOTAL_QUANTITY = 150;
+export const WSS_BINANCE_ENDPOINT = 'wss://stream.binance.com:9443';
+

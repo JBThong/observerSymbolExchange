@@ -7,6 +7,7 @@ import { SymbolController } from './symbol.controller';
 @Module({
   imports: [HttpModule],
   providers: [SymbolService],
-  controllers: [SymbolController]
+  controllers: [SymbolController],
+  exports: [SymbolService]
 })
 export class SymbolModule {}
