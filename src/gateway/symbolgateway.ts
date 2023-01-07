@@ -8,6 +8,10 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SymbolService } from '../modules/symbol/symbol.service'
+import { BinanceGateway } from './binancegateway';
+import { Logger } from "@nestjs/common";
+import { map, tap } from 'rxjs';
+
 
 @WebSocketGateway()
 export class SymbolGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
@@ -15,12 +19,19 @@ export class SymbolGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     @WebSocketServer()
     server: Server
 
-    constructor(private readonly symbolService: SymbolService) {}
+    private readonly logger = new Logger(SymbolGateway.name)
+
+    constructor(
+        private readonly symbolService: SymbolService,
+    ) {}
 
     @SubscribeMessage('sendSymbol')
-    async handleSendMessage(client: Socket, symbol) {
-        let orderList = await this.symbolService.getOrderList(symbol);
-        this.server.emit('recOrderList', orderList);
+    async handleSendOrderList(client: Socket, symbol: string) {
+        let binanceGateway = new BinanceGateway(symbol, 'bookTicker');
+        return binanceGateway.broadcastBookTickerPrice().pipe(map((bookTicker) => {
+            let orderList = this.symbolService.broadcastOrderList(bookTicker);
+            this.server.emit('recOrderList', orderList);
+          }))
     }
 
     async handleConnection(client: Socket) {

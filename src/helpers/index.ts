@@ -12,7 +12,7 @@ export function generateOrderList(stateOrder: number, bookTicker: any, limit: nu
     let firstPrice = parseFloat(isBidOrder ? bookTicker?.bidPrice : bookTicker?.askPrice);
     let firstQuantity = parseFloat(isBidOrder ? bookTicker?.bidQty : bookTicker?.askQty);
 
-    result = [...result, {price: firstPrice, qty: firstQuantity}];
+    result = [...result, {price: firstPrice, qty: firstQuantity, total: firstPrice * firstQuantity}];
 
     let condition = firstQuantity >= TOTAL_QUANTITY || firstPrice * firstQuantity >= TOTAL_QUANTITY_PRICE;
 
@@ -21,7 +21,7 @@ export function generateOrderList(stateOrder: number, bookTicker: any, limit: nu
     }
 
     let commonDifferenceOfQuantity = findDeltaBasedOnSumQuantity(TOTAL_QUANTITY - firstQuantity, 0, limit);
-    let commonDifferenceOfPrice = findDeltaBasedOnSumTotal(TOTAL_QUANTITY_PRICE, firstPrice, firstQuantity, commonDifferenceOfQuantity, limit);
+    let commonDifferenceOfPrice = findDeltaBasedOnSumTotal(TOTAL_QUANTITY_PRICE - (firstPrice * firstQuantity), firstPrice, TOTAL_QUANTITY - firstQuantity, commonDifferenceOfQuantity, limit);
 
     for (let i = 1; i < limit; i++) {
         let item = {
@@ -32,7 +32,7 @@ export function generateOrderList(stateOrder: number, bookTicker: any, limit: nu
         result = [...result, {...item, total: item.price * item.qty}];
     }
 
-    return result.sort((a,b) => isBidOrder ? (a.price - b.price) : (b.price - a.price));
+    return result.sort((a,b) => isBidOrder ? (b.price - a.price) : (a.price - b.price));
 }
 
 /**
@@ -108,4 +108,14 @@ export function calculateSum(array, property) {
     }, 0);
   
     return total;
-  }
+}
+
+export function parseStreamBookTicker(streamBookTicker) {
+    return {
+        symbol: streamBookTicker.s,
+        bidPrice: streamBookTicker.b,
+        bidQty: streamBookTicker.B,
+        askPrice: streamBookTicker.a,
+        askQty: streamBookTicker.A,
+    }
+}

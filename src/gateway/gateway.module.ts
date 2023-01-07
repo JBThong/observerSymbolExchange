@@ -8,6 +8,6 @@ import { SymbolService } from '../modules/symbol/symbol.service';
     imports: [
         SymbolModule,
     ],
-    providers: [ SymbolGateway, BinanceGateway]
+    providers: [ SymbolGateway],
 })
 export class GatewayModule {}

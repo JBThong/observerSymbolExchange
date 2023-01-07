@@ -13,7 +13,7 @@ export class SymbolService {
         return lastValueFrom(this.httpService.get(`${BINANCE_HOST}ticker/bookTicker?symbol=${symbol}`));
     }
 
-    async getOrderList(symbol, limit = 10) {
+    async getOrderList(symbol: string, limit = 10) {
         let bookTicker = await this.getLatestOrderbookProgress(symbol)
                                     .then(data => { return data.data })
                                     .catch(err => { 
@@ -23,17 +23,20 @@ export class SymbolService {
         if (bookTicker?.code) {
             throw new Error(bookTicker.msg);
         }
+    
+        return this.broadcastOrderList(bookTicker, limit)
+    }
 
-        
+    broadcastOrderList(bookTicker, limit = 10) {
         let bidOrderList = generateOrderList(1, bookTicker, limit);
         let askOrderList = generateOrderList(2, bookTicker, limit);
         let sumSizeBidOrderList = calculateSum(bidOrderList, 'qty').toFixed(6);
         let sumSizeAskOrderList = calculateSum(askOrderList, 'qty').toFixed(6);
-        let sumTotalBidOrderList = calculateSum(bidOrderList, 'price').toFixed(6);
-        let sumTotalAskOrderList = calculateSum(askOrderList, 'price').toFixed(6);
+        let sumTotalBidOrderList = calculateSum(bidOrderList, 'total').toFixed(6);
+        let sumTotalAskOrderList = calculateSum(askOrderList, 'total').toFixed(6);
 
         return {
-            symbol: symbol,
+            symbol: bookTicker.symbol,
             bidOrderList: bidOrderList,
             askOrderList: askOrderList,
             sumSizeBidOrderList: sumSizeBidOrderList,
@@ -41,6 +44,5 @@ export class SymbolService {
             sumTotalBidOrderList: sumTotalBidOrderList,
             sumTotalAskOrderList: sumTotalAskOrderList,
         }
-    
     }
 }
