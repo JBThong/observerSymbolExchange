@@ -119,7 +119,6 @@
       
       let orderAskBody = document.querySelector('.orderbook-ask table tbody');
       socket.on('recOrderList', (data) => {
-         console.log(data)
          if (data) {
             updateTitle(data.symbol);
             updateBidOrderList(data.bidOrderList);

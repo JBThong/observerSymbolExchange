@@ -15,8 +15,8 @@ describe('AppController', () => {
   });
 
   describe('root', () => {
-    it('should return "Welcome to the tokenize test!"', () => {
-      expect(appController.getHello()).toBe('Welcome to the tokenize test!');
+    it('should return message "Welcome to the tokenize test!"', () => {
+      expect(appController.getHello().message).toBe("Welcome to the tokenize test!");
     });
   });
 });
