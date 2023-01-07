@@ -2,8 +2,8 @@ import { STATE_ORDER, TOTAL_QUANTITY, TOTAL_QUANTITY_PRICE } from '../../configu
 
 /**
  * @param {number} stateOrder The stateOrder is like bid or ask.
- * @param {any} bookTicker
- * @param {number} limit
+ * @param {any} bookTicker Best price/qty on the order book for a symbo
+ * @param {number} limit 
  * 
  */
 export function generateOrderList(stateOrder: number, bookTicker: any, limit: number) {
@@ -21,7 +21,7 @@ export function generateOrderList(stateOrder: number, bookTicker: any, limit: nu
     }
 
     let commonDifferenceOfQuantity = findDeltaBasedOnSumQuantity(TOTAL_QUANTITY - firstQuantity, 0, limit);
-    let commonDifferenceOfPrice = findDeltaBasedOnSumTotal(TOTAL_QUANTITY_PRICE - (firstPrice * firstQuantity), firstPrice, TOTAL_QUANTITY - firstQuantity, commonDifferenceOfQuantity, limit);
+    let commonDifferenceOfPrice = findDeltaBasedOnSumTotal(TOTAL_QUANTITY_PRICE - (firstPrice * firstQuantity), firstPrice, commonDifferenceOfQuantity, commonDifferenceOfQuantity, limit);
 
     for (let i = 1; i < limit; i++) {
         let item = {
@@ -57,7 +57,7 @@ function getRandomPrice(price: number, stateOrder: Boolean, commonDifferenceOfPr
  * @returns {number} The random quantity.
  */
 function getRandomQuantity(quantity: number, commonDifferenceOfQuantity: number, index): number {
-    return quantity + Math.random() * (index) * commonDifferenceOfQuantity;
+    return quantity + Math.random() * commonDifferenceOfQuantity;
 }
 
 
@@ -102,6 +102,14 @@ function findDeltaBasedOnSumTotal(sumTotal: number, firstPrice: number,
     return 0;
 }
 
+/**
+ * Returns total value of the property of array.
+ * 
+ * @param {Array} array The sum of n price of an arithmetic sequence (Price * Quantity).
+ * @param {String} property The first price of the progression.
+ * @returns {number} The total value of the property of array.
+ * 
+ */
 export function calculateSum(array, property) {
     let total = array.reduce((accumulator, object) => {
       return accumulator + object[property];
@@ -110,6 +118,13 @@ export function calculateSum(array, property) {
     return total;
 }
 
+/**
+ * Returns bookTicker object.
+ * 
+ * @param {Object} streamBookTicker The streamBookTicker
+ * @returns {number} The bookTicker object.
+ * 
+ */
 export function parseStreamBookTicker(streamBookTicker) {
     return {
         symbol: streamBookTicker.s,

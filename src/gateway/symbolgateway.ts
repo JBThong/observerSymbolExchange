@@ -10,7 +10,7 @@ import { Server, Socket } from 'socket.io';
 import { SymbolService } from '../modules/symbol/symbol.service'
 import { BinanceGateway } from './binancegateway';
 import { Logger } from "@nestjs/common";
-import { map, tap } from 'rxjs';
+import { map } from 'rxjs';
 
 
 @WebSocketGateway()
@@ -29,14 +29,13 @@ export class SymbolGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     async handleSendOrderList(client: Socket, symbol: string) {
         let binanceGateway = new BinanceGateway(symbol, 'bookTicker');
         return binanceGateway.broadcastBookTickerPrice().pipe(map((bookTicker) => {
-            let orderList = this.symbolService.broadcastOrderList(bookTicker);
+            let orderList = this.symbolService.generateOrderList(bookTicker);
             this.server.emit('recOrderList', orderList);
-          }))
+        }))
     }
 
     async handleConnection(client: Socket) {
         console.log("Connected client id: ", client.id);
-
     }
 
     async handleDisconnect(client: Socket) {

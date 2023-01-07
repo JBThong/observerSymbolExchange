@@ -29,7 +29,7 @@
                   </tbody>
                </table>
                <div class="m-2 total-bid">
-                  <span class="me-2"><b>Total:</b> {{data.sumTotalBidOrderList}}</span>
+                  <span class="me-2"><b>Total (Price * size):</b> {{data.sumTotalBidOrderList}}</span>
                   <span><b>Size:</b> {{data.sumSizeBidOrderList}}</span>
                </div>
             </div>
@@ -51,7 +51,7 @@
                   </tbody>
                </table>
                <div class="m-2 total-ask">
-                  <span class="me-2"><b>Total:</b> {{data.sumTotalAskOrderList}}</span>
+                  <span class="me-2"><b>Total (Price * size):</b> {{data.sumTotalAskOrderList}}</span>
                   <span><b>Size:</b> {{data.sumSizeAskOrderList}}</span>
                </div>
             </div>
@@ -102,14 +102,14 @@
       function updateTotalBid(sumTotalBidOrderList, sumSizeBidOrderList) {
          let totalBid = document.querySelector('.total-bid');
          totalBid.innerHTML = `
-            <span class="me-2"><b>Total:</b> ${sumTotalBidOrderList}</span>
+            <span class="me-2"><b>Total (Price * size):</b> ${sumTotalBidOrderList}</span>
                   <span><b>Size:</b> ${sumSizeBidOrderList}</span>`;
       }
 
       function updateTotalTask(sumTotalAskOrderList, sumSizeAskOrderList) {
          let totalAsk = document.querySelector('.total-ask');
          totalAsk.innerHTML = `
-            <span class="me-2"><b>Total:</b> ${sumTotalAskOrderList}</span>
+            <span class="me-2"><b>Total (Price * size):</b> ${sumTotalAskOrderList}</span>
                   <span><b>Size:</b> ${sumSizeAskOrderList}</span>`;
       }
 

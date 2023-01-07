@@ -8,11 +8,26 @@ import { generateOrderList, calculateSum } from '../../helpers/index'
 @Injectable()
 export class SymbolService {
     constructor(private httpService: HttpService) {};
-
+    
+    /**
+     * Get latest booktTicker base on requesting to exchange.
+     * 
+     * @param {String} symbol The symbol which we request.
+     * @returns {Object} The bookTicker object.
+     * 
+     */
     getLatestOrderbookProgress(symbol: String) {
         return lastValueFrom(this.httpService.get(`${BINANCE_HOST}ticker/bookTicker?symbol=${symbol}`));
     }
 
+    /**
+     * Returns Order list.
+     * 
+     * @param {String} symbol The symbol.
+     * @param {number} limit
+     * @returns {Object} The order list data.
+     * 
+     */
     async getOrderList(symbol: string, limit = 10) {
         let bookTicker = await this.getLatestOrderbookProgress(symbol)
                                     .then(data => { return data.data })
@@ -24,10 +39,18 @@ export class SymbolService {
             throw new Error(bookTicker.msg);
         }
     
-        return this.broadcastOrderList(bookTicker, limit)
+        return this.generateOrderList(bookTicker, limit)
     }
 
-    broadcastOrderList(bookTicker, limit = 10) {
+    /**
+     * Returns generate order list base on lastest booktiker.
+     * 
+     * @param {Object} bookTicker The symbol.
+     * @param {number} limit
+     * @returns {Object} The order list data.
+     * 
+     */
+    generateOrderList(bookTicker, limit = 10) {
         let bidOrderList = generateOrderList(1, bookTicker, limit);
         let askOrderList = generateOrderList(2, bookTicker, limit);
         let sumSizeBidOrderList = calculateSum(bidOrderList, 'qty').toFixed(6);

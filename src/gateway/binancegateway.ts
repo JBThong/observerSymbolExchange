@@ -10,7 +10,6 @@ import { Logger } from "@nestjs/common";
 export class BinanceGateway {
 
     public socket: WebSocket;
-
     protected urlSocket = '';
     private readonly logger = new Logger(BinanceGateway.name)
 
@@ -18,6 +17,12 @@ export class BinanceGateway {
         this.urlSocket = `${WSS_BINANCE_ENDPOINT}/ws/${symbol.toLowerCase()}@${method}`;
     }
 
+    /**
+     * Returns an observable data, which we get from real time exchange.
+     * 
+     * @returns { Observable } The observable data.
+     * 
+     */
     broadcastBookTickerPrice() {
         this.socket = new WebSocket(this.urlSocket);
         let stream = new Observable((observer) => {
